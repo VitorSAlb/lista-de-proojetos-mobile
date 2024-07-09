@@ -1,19 +1,39 @@
 import React, {useState} from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from "react-native";
+import { Text, View, TouchableOpacity, Modal, TextInput, ScrollView, Alert } from "react-native";
+import styles from '../styles/styles';
+
+
+interface CardData {
+    title: string;
+    infos: string[];
+    description: string;
+}
 
 const CardContainter = () => {
     const [cards, setCards] = useState([
-        { title: "GOTH", infos: ['JavaScript', 'CSS', 'HTML'] },
-        { title: "First App", infos: ['TypeScript', 'React Native'] },
-        { title: "Biblioteca cmd", infos: ['Java'] }
+        { title: "GOTH", infos: ['JavaScript', 'CSS', 'HTML'], description: 'Site de rankeamento de jogos' },
+        { title: "First App", infos: ['TypeScript', 'React Native'], description: 'Teste criação de app' },
+        { title: "Biblioteca cmd", infos: ['Java'], description: 'Biblioteca basica via cmd para conferir livros' }
     ]);
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisibleCard, setModalVisibleCard] = useState(false);
     const [newCardTitle, setNewCardTitle] = useState('');
-    const [newCardInfos, setNewCardInfos] = useState([''])
+    const [newCardInfos, setNewCardInfos] = useState(['']);
+    const [newCardDescribe, setnewCardDescribe] = useState('');
+    const [selectedCard, setSelectedCard] = useState(null);
+
+
+    const confirmTitle = () => {
+        if (newCardTitle !== '') {
+            addCard()
+        } else {
+            Alert.alert("Tente Novamente", "Por favor, insira um título para o card.")
+        }
+    };
 
     const addCard = () => {
-        const newCard = { title: newCardTitle, infos: newCardInfos.filter(info => info.trim() !== '') };
+        const newCard = { title: newCardTitle, infos: newCardInfos.filter(info => info.trim() !== ''), description: newCardDescribe };
         setCards([...cards, newCard]);
         resetState();
     };
@@ -22,7 +42,7 @@ const CardContainter = () => {
         setNewCardInfos([...newCardInfos, ""]);
     };
 
-    const handleInfoChange = (text, index) => {
+    const handleInfoChange = (text: string, index: number) => {
         const updatedInfos = [...newCardInfos];
         updatedInfos[index] = text;
         setNewCardInfos(updatedInfos);
@@ -32,15 +52,54 @@ const CardContainter = () => {
         setModalVisible(false);
         setNewCardInfos(['']);
         setNewCardTitle('');
-    }
+        setnewCardDescribe('');
+    };
+
+    const handleDeleteCard = (index: Number) => {
+        Alert.alert(
+          "Confirmação",
+          "Você tem certeza que deseja excluir este card?",
+          [
+            {
+              text: "Cancelar",
+              style: "cancel",
+            },
+            {
+              text: "Excluir",
+              onPress: () => {
+                const updatedCards = cards.filter((_, i) => i !== index);
+                setCards(updatedCards);
+              },
+              style: "destructive",
+            },
+          ],
+          { cancelable: false }
+        );
+    };
+
+    const handleOpenCardModal = (card) => {
+        setSelectedCard(card);
+        setModalVisibleCard(true);
+    };
+    
+
+
 
     return(
         <View style={styles.container} >
             <TouchableOpacity style={styles.TOContaniner} onPress={() => setModalVisible(true)}>
-                <Text style={styles.btnNP}>New Project</Text>
+                <Text style={styles.btnNP}>Novo Projeto</Text>
             </TouchableOpacity>
             {cards.map((card, index) => (
-                <Card key={index} title={card.title} infos={card.infos} />
+                <TouchableOpacity style={styles.MaxWidth} onPress={() => handleOpenCardModal(card)} key={index}>
+                    <Card 
+                        key={index} 
+                        title={card.title} 
+                        infos={card.infos} 
+                        onDelete={() => handleDeleteCard(index)}
+                    />
+                </TouchableOpacity>
+                
             ))}
 
             <Modal
@@ -51,47 +110,99 @@ const CardContainter = () => {
                     setModalVisible(false);
                 }}
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>New Card Details</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Title"
-                            onChangeText={text => setNewCardTitle(text)}
-                            value={newCardTitle}
-                        />
-                        {newCardInfos.map((info, index) => (
+                <ScrollView>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>Novo Projeto</Text>
                             <TextInput
-                                key={index}
                                 style={styles.input}
-                                placeholder={`Info ${index + 1}`}
-                                onChangeText={text => handleInfoChange(text, index)}
-                                value={info}
+                                placeholder="Título"
+                                onChangeText={text => setNewCardTitle(text)}
+                                value={newCardTitle}
                             />
-                        ))}
-                        <TouchableOpacity onPress={addInfoInput}>
-                            <Text style={styles.addInfoBtn}>Add More Info</Text>
-                        </TouchableOpacity>
-                        <Button title="Add Card" onPress={addCard} />
-                        <Button title="Close" onPress={() => setModalVisible(false)} />
+                            <TextInput
+                                style={styles.inputDescribe}
+                                placeholder="Descrição"
+                                onChangeText={text => setnewCardDescribe(text)}
+                                value={newCardDescribe}
+                                multiline={true}
+                                maxLength={200}
+                            />
+                            {newCardInfos.map((info, index) => (
+                                <TextInput
+                                    key={index}
+                                    style={styles.input}
+                                    placeholder={`Info ${index + 1}`}
+                                    onChangeText={text => handleInfoChange(text, index)}
+                                    value={info}
+                                />
+                            ))}
+                            <TouchableOpacity onPress={addInfoInput}>
+                                <Text style={styles.addInfoBtn}>Add nova info +</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.addCard} onPress={confirmTitle}>
+                                <Text style={styles.addCardText} >Adicionar Card</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity style={styles.closeBtn} onPress={() => setModalVisible(false)}>
+                                <Text >Fechar</Text>
+                            </TouchableOpacity>
+                            
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
             </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisibleCard}
+                onRequestClose={() => setModalVisibleCard(false)}
+            >
+                <ScrollView>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            {selectedCard && (
+                                <>
+                                    <Text style={styles.modalText}>{selectedCard.title}</Text>
+                                    <Text style={styles.modalText}>{selectedCard.description}</Text>
+                                    {selectedCard.infos.map((info, index) => (
+                                        <Text key={index} style={styles.modalText}>{info}</Text>
+                                    ))}
+                                    <TouchableOpacity>
+                                        <Text>Editar</Text>
+                                    </TouchableOpacity>
+                                </>
+                            )}
+                            <TouchableOpacity style={styles.closeBtn} onPress={() => setModalVisibleCard(false)}>
+                                <Text>Fechar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ScrollView>
+            </Modal>
+
         </View>
     )
 }
 
-
-
 interface CardProps {
     title: string;
     infos: string[];
+    onDelete: () => void;
 }
 
-const Card: React.FC<CardProps> = ({title, infos}) => {
+const Card: React.FC<CardProps> = ({title, infos, onDelete}) => {
     return(
         <View style={styles.box}>
-            <Text style={styles.titleBox}>{title}</Text>
+            <View style={styles.topo}>
+                <Text style={styles.titleBox}>{title}</Text>
+                <TouchableOpacity style={styles.excluirBtn} onPress={onDelete}>
+                    <Text style={styles.excluirBtnText}>X</Text>
+                </TouchableOpacity>
+            </View>
+            
             <View style={styles.infoList}>
                 {infos.map((info, index) => (
                     <View key={index} style={[styles.infoItem, getBulletColor(info)]}>
@@ -121,100 +232,5 @@ const getBulletColor = (info: string) => {
             return { backgroundColor: '#FFFFFF' }; 
     }
 };
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: 'auto',
-        borderWidth: 1,
-        borderColor: '#574F4D',
-        borderRadius: 10,
-        borderStyle: 'solid',
-        padding: 15,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-    },
-    box: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#574F4D',
-        borderRadius: 10,
-        borderStyle: 'solid',
-        padding: 10,
-        marginTop: 10,
-    },
-    titleBox: {
-        color: '#FAFAFA',
-        fontSize: 18,
-        marginBottom: 10,
-    },
-    infoList: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-    },
-    infoItem: {
-        backgroundColor: '#E0E0E0',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 5,
-        marginRight: 10,
-        marginBottom: 5,
-    },
-    TOContaniner: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    btnNP: {
-        backgroundColor: '#FAFAFA',
-        padding: 5,
-        borderRadius: 5,
-        width: '100%',
-        textAlign: 'center',
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-    },
-    modalView: {
-        width: '90%',
-        margin: 15,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-        fontSize: 20,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        marginBottom: 10,
-        borderRadius: 5,
-        width: '100%',
-    },
-    addInfoBtn: {
-        color: '#007BFF',
-        marginBottom: 10,
-        width: '100%'
-    },
-});
 
 export {CardContainter}
