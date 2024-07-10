@@ -1,20 +1,30 @@
+import React from 'react';
+import { AddCard } from '@/components/AddCard';
 import { CardContainter } from '@/components/card';
 import { StyleSheet, View, Text, ScrollView, StatusBar } from 'react-native';
+import { ModalProvider } from '@/scripts/ModalContext'; // Ajuste o caminho conforme necessário
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   return (
-    <ScrollView style={styles.scrollViewContent}>
-      <StatusBar backgroundColor='#1E1E1E' barStyle='light-content'></StatusBar>
-      <View style={styles.container}>
-          <Text style={styles.mainText}>Meus Projetos</Text>
-          <CardContainter/>
-      </View>
-    </ScrollView>
+    <ModalProvider>
+      <>
+        <StatusBar backgroundColor='#1E1E1E' barStyle='light-content' />
+        <View style={styles.bgColorFull}>
+          <ScrollView style={styles.scrollViewContent}>
+            <View style={styles.container}>
+              <Text style={styles.mainText}>Meus Projetos</Text>
+              <CardContainter />
+            </View>
+          </ScrollView>
+          <AddCard />
+        </View>
+      </>
+    </ModalProvider>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  scrollViewContent:{
+  scrollViewContent: {
     flexGrow: 1,
     backgroundColor: '#1E1E1E',
   },
@@ -29,6 +39,11 @@ const styles = StyleSheet.create({
   mainText: {
     color: '#FAFAFA',
     marginBottom: 5,
-  }
-
+  },
+  bgColorFull: {
+    backgroundColor: '#1E1E1E',
+    height: '100%',
+  },
 });
+
+export default HomeScreen;

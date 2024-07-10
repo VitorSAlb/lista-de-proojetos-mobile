@@ -53,11 +53,21 @@ export default StyleSheet.create({
         width: '100%',
         textAlign: 'center',
     },
+    btnNav: {
+        backgroundColor: '#F2F2F2',
+        paddingHorizontal: '10%',
+        paddingVertical: 10,
+        borderRadius: 5,
+        width: '100%',
+        textAlign: 'center',
+    },
     centeredView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        marginVertical: '25%',
+        maxWidth: 360,
+        minWidth: '100%',
     },
     modalView: {
         width: '90%',
@@ -75,10 +85,38 @@ export default StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
+    modalViewCard: {
+        width: '90%',
+        margin: 15,
+        backgroundColor: '#303030',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
         fontSize: 20,
+    },
+    modalTitleCard: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 32,
+        color: '#FAFAFA',
+    },
+    modalTextCard: {
+        marginBottom: 15,
+        textAlign: 'justify',
+        fontSize: 16,
+        color: '#FAFAFA',
     },
     input: {
         borderWidth: 1,
@@ -125,6 +163,15 @@ export default StyleSheet.create({
         margin: 5,
         paddingVertical: 12,
     },
+    editBTN: {
+        width: '100%',
+        backgroundColor: '#738EF4',
+        padding: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 5,
+        paddingVertical: 12,
+    },
     topo: {
         display: 'flex',
         flexDirection: 'row',
@@ -136,10 +183,25 @@ export default StyleSheet.create({
         // borderWidth: 1,
         padding: 10
     },
-    excluirBtnText: {
-        color: '#FAFAFA',
+    whiteText: {
+        color: '#F2F2F2',
     },
     MaxWidth: {
         width: '100%'
+    },
+    NavBottom: {
+        backgroundColor: '#303030',
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        borderRadius: 10 
+    },
+    stats: {
+        backgroundColor: 'green',
+        marginLeft: 5,
+        borderRadius: 100,
+        width: 5,
+        height: 5,
     }
 });
