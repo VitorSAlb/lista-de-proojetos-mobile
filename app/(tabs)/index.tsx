@@ -7,8 +7,9 @@ import { ModalProvider } from '@/scripts/ModalContext'; // Ajuste o caminho conf
 const HomeScreen = () => {
   return (
     <ModalProvider>
+      <StatusBar backgroundColor='#1E1E1E' barStyle='light-content' />
       <>
-        <StatusBar backgroundColor='#1E1E1E' barStyle='light-content' />
+        
         <View style={styles.bgColorFull}>
           <ScrollView style={styles.scrollViewContent}>
             <View style={styles.container}>

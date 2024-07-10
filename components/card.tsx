@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, View, TouchableOpacity, Modal, TextInput, ScrollView, Alert } from "react-native";
 import styles from "@/styles/styles";
-import { useModal } from "@/scripts/ModalContext"; // Ajuste o caminho conforme necessário
+import { useModal } from "@/scripts/ModalContext";
 
 interface CardData {
   title: string;
@@ -23,7 +23,6 @@ const CardContainter = () => {
   const [newCardInfos, setNewCardInfos] = useState(['']);
   const [newCardDescribe, setnewCardDescribe] = useState('');
   const [selectedCard, setSelectedCard] = useState(null);
-  const [selectedLanguage, setSelectedLanguage] = useState();
 
   const confirmTitle = () => {
     if (newCardTitle !== '') {
@@ -82,12 +81,7 @@ const CardContainter = () => {
     setSelectedCard(card);
     setModalVisibleCard(true);
   };
-
-  const updateCardStatus = (index: number, status: 'ideia' | 'em processo' | 'feito') => {
-    const updatedCards = [...cards];
-    updatedCards[index].status = status;
-    setCards(updatedCards);
-  };
+  
 
   return (
     <View style={styles.container}>
@@ -245,6 +239,8 @@ const getBulletColor = (info: string) => {
       return { backgroundColor: '#E27A00' };
     case 'react native':
       return { backgroundColor: '#00E2E2' };
+    case 'react':
+      return { backgroundColor: '#00A2E2' };
     case 'em progresso':
         return { backgroundColor: '#FFD700' };
     case 'feito':
